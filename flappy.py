@@ -17,9 +17,13 @@ BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs","base.
 
 class Bird:
 
+    # image array
     IMGS = BIRD_IMG
+    # limit when looking down
     MAX_ROTATION = 25
+    # limit for tilt
     ROT_VEL = 20
+    # limit for image change
     ANIMATION_TIME = 5
     
     def __init__(self,x,y):
@@ -34,10 +38,12 @@ class Bird:
         self.img_count = 0
         self.img = self.IMGS[0]
 
+
     def jump(self):
         self.vel = -10.5
         self.tick_count = 0
         self.height = self.y
+
 
     def move(self):
         self.tick_count += 1
@@ -90,6 +96,8 @@ class Bird:
 
         win.blit(rotated_image,new_rect.topleft)
 
+    
+    
     def get_mask(self):
 
         return pygame.mask.from_surface(self.img)
@@ -105,12 +113,15 @@ def draw_window(win,bird):
 def main():
     bird = Bird(200,200)
     win = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
+    clock = pygame.time.Clock()
 
     run = True
     while run:
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+        bird.move()        
         draw_window(win,bird)
 
         
