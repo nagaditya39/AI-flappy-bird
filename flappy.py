@@ -4,8 +4,10 @@ import os
 import time
 import random
 
+pygame.init()
+
 # window height
-WIN_WIDTH = 450
+WIN_WIDTH = 500
 WIN_HEIGHT = 800
 
 # loading ui image elements
@@ -110,13 +112,15 @@ class Pipe:
     def __init__(self, x) :
         self.x = x
         self.height = 0
-        
+        self.gap = Pipe.GAP
+        self.passed = False
+
+
         self.top = 0
         self.bottom = 0
         self.PIPE_Top = pygame.transform.flip(PIPE_IMG, False, True)
         self.PIPE_Bottom = PIPE_IMG
 
-        self.passed = False
         self.set_height()
 
     def set_height(self):
@@ -185,10 +189,16 @@ class Base:
 
 
 
-def draw_window(win,bird,pipes):
+def draw_window(win,bird,pipes,base):
 
     win.blit(BG_IMG,(0,0))
 
+    for pipe in pipes:
+        pipe.draw(win)
+    
+    base.draw(win)
+
+        
 
 
     bird.draw(win)
@@ -197,7 +207,15 @@ def draw_window(win,bird,pipes):
 
 
 def main():
-    bird = Bird(200,200)
+    bird = Bird(230,350)
+    base = Base(730)
+    pipes = [Pipe(WIN_WIDTH)]
+    
+    score = 0
+    rem=[]
+    add_pipe = False
+
+
     win = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
     clock = pygame.time.Clock()
 
@@ -207,8 +225,42 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-        bird.move()        
-        draw_window(win,bird)
+        
+        #bird.move()        
+        
+        for pipe in pipes:
+
+            if pipe.collide(bird,win):
+                pass
+
+            if pipe.x + pipe.PIPE_Top.get_width() < 0:
+                rem.append(pipe)
+            
+            pipe.move()
+
+            if not pipe.passed and pipe.x < bird.x:
+                 pipe.passed = True
+                 add_pipe = True
+            
+
+        if add_pipe:
+            score += 1    
+            pipes.append(Pipe(WIN_WIDTH))
+            # mistake was forgetting to reset add_pipe flag
+            # hence pipe was generated in every frame
+            # overlapping
+            add_pipe = False
+
+        for r in rem:
+            # check to see if pipe to be removed
+            # has been generated
+            if r in pipes:
+                pipes.remove(r)
+
+        base.move()
+    
+
+        draw_window(win,bird,pipes,base)
 
         
     pygame.quit()
