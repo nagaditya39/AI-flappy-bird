@@ -31,7 +31,3 @@ python flappy.py
 
 - The AI model automatically controls the bird's movements, aiming to achieve the highest score possible.
 
-## Credits
-
-- Built using Python and Pygame library
-- NEAT (NeuroEvolution of Augmenting Topologies) for AI training
