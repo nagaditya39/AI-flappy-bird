@@ -6,9 +6,6 @@ import random
 
 pygame.init()
 pygame.font.init()
-# window height
-WIN_WIDTH = 400
-WIN_HEIGHT = 600
 
 gen = 0
 
@@ -20,6 +17,9 @@ BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs","base.
 
 STAT_FONT = pygame.font.SysFont("comicsans",50)
 
+# window height
+WIN_WIDTH = BG_IMG.get_width() -50
+WIN_HEIGHT = 650
 
 
 class Bird:
@@ -336,7 +336,7 @@ def main(genomes, config):
             # reward for passing
             for g in ge:
                 g.fitness += 5
-            pipes.append(Pipe(WIN_WIDTH))
+            pipes.append(Pipe(500))
             # mistake was forgetting to reset add_pipe flag
             # hence pipe was generated in every frame
             # overlapping
