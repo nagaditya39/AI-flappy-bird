@@ -201,7 +201,8 @@ def draw_window(win,bird,pipes,base,score):
     win.blit(text,(WIN_WIDTH - 10 - text.get_width(), 5))
     base.draw(win)
  
-    bird.draw(win)
+    for bird in birds:
+        bird.draw(win)
     
     pygame.display.update()
 
@@ -212,8 +213,8 @@ def main(genomes, config):
     nets =[]
     ge = []
 
-    for g in genomes:
-        net = near.nn.FeedForward(g,config)
+    for _,g in genomes:
+        net = neat.nn.FeedForward.create(g,config)
         nets.append(net)
         birds.append(Bird(200,310))
         g.fitness = 0
@@ -223,8 +224,7 @@ def main(genomes, config):
     pipes = [Pipe(WIN_WIDTH)]
     
     score = 0
-    rem=[]
-    add_pipe = False
+
 
 
     win = pygame.display.set_mode((WIN_WIDTH,WIN_HEIGHT))
@@ -236,9 +236,30 @@ def main(genomes, config):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                pygame.quit()
+                quit()       
+
         
-        #bird.move()        
-        
+        pipe_ind = 0
+        if len(birds) > 0:
+            if len(pipes) > 1 and birds[0].x > pipes[0].x + pipes[0].PIPE_Top.get_width():
+                pipe_ind = 1
+            else:
+                run = False
+                break
+
+            
+        for x, bird in enumerate(birds):
+            bird.move()        
+            ge[x].fitness += 0.1
+
+            output = nets[x].activate((bird.y, abs(bird.y - pipes[pipe_ind].height), abs(bird.y - pipes[pipe_ind].bottom)))
+            
+            if output[0] > 0.5:
+                bird.jump()
+
+        rem=[]
+        add_pipe = False
         for pipe in pipes:
             for x, bird in enumerate(birds):
                 if pipe.collide(bird,win):
@@ -281,13 +302,10 @@ def main(genomes, config):
         base.move()
     
 
-        draw_window(win,bird,pipes,base,score)
+        draw_window(win,birds,pipes,base,score)
 
         
-    pygame.quit()
-    quit()       
-
-main()    
+    
 
 def run(config_path):
     config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,neat.DefaultSpeciesSet,neat.DefaultStagnation,config_path)
