@@ -6,6 +6,8 @@ This is a Pygame-based implementation of the classic Flappy Bird game, featuring
 
 The game involves the familiar mechanics of Flappy Bird where the player controls a bird, guiding it through a series of pipes without collision. The AI model, powered by NEAT, is trained to autonomously control the bird's movements, gradually improving its performance through successive generations.
 
+![flappy](flappy.gif)
+
 ## Installation
 
 1. Clone the repository:
