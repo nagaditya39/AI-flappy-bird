@@ -18,7 +18,7 @@ BASE_IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs","base.
 STAT_FONT = pygame.font.SysFont("comicsans",50)
 
 # window height
-WIN_WIDTH = BG_IMG.get_width() -50
+WIN_WIDTH = BG_IMG.get_width() -100
 WIN_HEIGHT = 650
 
 
@@ -283,7 +283,7 @@ def main(genomes, config):
                 run = False
                 pygame.quit()
                 quit()   
-                break    
+                    
 
         # pipe index
         pipe_ind = 0
@@ -336,7 +336,7 @@ def main(genomes, config):
             # reward for passing
             for g in ge:
                 g.fitness += 5
-            pipes.append(Pipe(500))
+            pipes.append(Pipe(420))
             # mistake was forgetting to reset add_pipe flag
             # hence pipe was generated in every frame
             # overlapping
@@ -380,8 +380,8 @@ def run(config_path):
     stats = neat.StatisticsReporter()
     p.add_reporter(stats)
 
-    # running upto 100 gens
-    winner = p.run(main,100)
+    # running it upto nth gens
+    winner = p.run(main,20)
 
     # displaying best result
     print('Best genome: ' + str(winner))
